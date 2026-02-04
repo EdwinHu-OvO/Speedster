@@ -13,8 +13,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<!-- <key>label</key>
-			<string>Links</string> -->
+			<key>label</key>
+			<string>Links</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -43,8 +43,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<!-- <key>label</key>
-			<string>Links</string> -->
+			<key>label</key>
+			<string>App Open/Close</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -217,6 +217,8 @@
 			<string>SideEffect</string>
 			<key>footerAlignment</key>
 			<integer>1</integer>
+			<key>label</key>
+			<string>In App Speed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -254,7 +256,6 @@
 			<key>key</key>
 			<string>DurationMassValue</string>
 		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
@@ -291,10 +292,11 @@
 			<key>key</key>
 			<string>DampingValue</string>
 		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Folder</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -371,6 +373,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Screen Off/On</string>
 		</dict>
 		<dict>
 			<key>cell</key>
