@@ -64,6 +64,24 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.hoangdus.speedsterprefs</string>
+			<key>PostNotification</key>
+			<string>com.hoangdus.speedsterprefs-updated</string>
+			<key>key</key>
+			<string>isFineTuneSpeedEnable</string>
+			<key>label</key>
+			<string>FineTuneSpeed</string>
+			<key>cellClass</key>
+			<string>SpeedsterSwitchCell</string>
+			<key>id</key>
+   			<string>1</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSSegmentCell</string>
 			<key>default</key>
 			<real>1</real>
@@ -91,22 +109,8 @@
 				<string>4</string>
 				<string>5</string>
 			</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.hoangdus.speedsterprefs</string>
-			<key>PostNotification</key>
-			<string>com.hoangdus.speedsterprefs-updated</string>
-			<key>key</key>
-			<string>isFineTuneSpeedEnable</string>
-			<key>label</key>
-			<string>FineTuneSpeed</string>
-			<key>cellClass</key>
-			<string>SpeedsterSwitchCell</string>
+			<key>id</key>
+   			<string>2</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -127,6 +131,8 @@
 			<false/>
 			<key>key</key>
 			<string>FineTuneSpeedValue</string>
+			<key>id</key>
+   			<string>3</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -141,6 +147,22 @@
 			<string>isBounceEnable</string>
 			<key>label</key>
 			<string>AppOpenCloseBounce</string>
+			<key>cellClass</key>
+			<string>SpeedsterSwitchCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.hoangdus.speedsterprefs</string>
+			<key>PostNotification</key>
+			<string>com.hoangdus.speedsterprefs-updated</string>
+			<key>key</key>
+			<string>isFineTuneBounceEnable</string>
+			<key>label</key>
+			<string>FineTuneBounce</string>
 			<key>cellClass</key>
 			<string>SpeedsterSwitchCell</string>
 		</dict>
@@ -173,22 +195,8 @@
 				<string>4</string>
 				<string>5</string>
 			</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.hoangdus.speedsterprefs</string>
-			<key>PostNotification</key>
-			<string>com.hoangdus.speedsterprefs-updated</string>
-			<key>key</key>
-			<string>isFineTuneBounceEnable</string>
-			<key>label</key>
-			<string>FineTuneBounce</string>
-			<key>cellClass</key>
-			<string>SpeedsterSwitchCell</string>
+			<key>id</key>
+   			<string>4</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -209,6 +217,8 @@
 			<false/>
 			<key>key</key>
 			<string>FineTuneBounceValue</string>
+			<key>id</key>
+   			<string>5</string>
 		</dict>
 		<dict>
 			<key>cell</key>
