@@ -2,7 +2,7 @@
 static BOOL isOnSpringBoard;
 static double SwitcherDismiss;
 
-static Class CASpringAnimationClass = Nil;
+// static Class CASpringAnimationClass = Nil;
 // static Class SBFAnimationSettingsClass = Nil;
 
 static BOOL isSpeedEnable;
@@ -414,7 +414,7 @@ static double reverseFolderSliderValue(double input){
 
 %ctor { //More pref
     // NSLog(@"[Speedster] load test");
-    CASpringAnimationClass = NSClassFromString(@"CASpringAnimation");
+    // CASpringAnimationClass = NSClassFromString(@"CASpringAnimation");
     // SBFAnimationSettingsClass = NSClassFromString(@"SBFAnimationSettings");
     isOnSpringBoard = [[[NSBundle mainBundle] bundleIdentifier] isEqual:@"com.apple.springboard"];
 
