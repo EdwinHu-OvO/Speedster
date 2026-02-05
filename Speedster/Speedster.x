@@ -43,9 +43,9 @@ static BOOL isNoWallZoominSwitcher;
 static BOOL isInstantFolder;
 
 void preferencesthings(){ //pref starts to look THICC
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/jb/var/mobile/Library/Preferences/com.hoangdus.speedsterprefs.plist"];
+    NSDictionary *prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.hoangdus.speedsterprefs"];
+
     //app close/open values
-    // NSDictionary *prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.hoangdus.speedsterprefs"];
     isSpeedEnable = (prefs && [prefs objectForKey:@"isSpeedEnable"] ? [[prefs valueForKey:@"isSpeedEnable"] boolValue] : NO );
     isBounceEnable = (prefs && [prefs objectForKey:@"isBounceEnable"] ? [[prefs valueForKey:@"isBounceEnable"] boolValue] : NO );
     Speedvalue = (prefs && [prefs objectForKey:@"Speedvalue"] ? [[prefs valueForKey:@"Speedvalue"] integerValue] : 1 );
@@ -60,7 +60,7 @@ void preferencesthings(){ //pref starts to look THICC
     isScreensleepEnable = (prefs && [prefs objectForKey:@"isScreensleepEnable"] ? [[prefs valueForKey:@"isScreensleepEnable"] boolValue] : NO );
     Screensleepvalue = (prefs && [prefs objectForKey:@"Screensleepvalue"] ? [[prefs valueForKey:@"Screensleepvalue"] doubleValue] : 0.01 );
     Screenwakevalue = (prefs && [prefs objectForKey:@"Screenwakevalue"] ? [[prefs valueForKey:@"Screenwakevalue"] doubleValue] : 2 );
-    
+
     //folder values
     isFolderAnimationEnabled = (prefs && [prefs objectForKey:@"isFolderAnimationEnabled"] ? [[prefs valueForKey:@"isFolderAnimationEnabled"] boolValue] : NO );
     isFolderAnimationBounceEnabled = (prefs && [prefs objectForKey:@"isFolderBounceEnabled"] ? [[prefs valueForKey:@"isFolderBounceEnabled"] boolValue] : NO );
@@ -69,6 +69,17 @@ void preferencesthings(){ //pref starts to look THICC
     FolderDampingValue = (prefs && [prefs objectForKey:@"FolderDampingValue"] ? [[prefs valueForKey:@"FolderDampingValue"] doubleValue] : 0 );
     FolderMassValue = (prefs && [prefs objectForKey:@"FolderMassValue"] ? [[prefs valueForKey:@"FolderMassValue"] doubleValue] : 0 );
     // FolderStiffnessValue = (prefs && [prefs objectForKey:@"FolderStiffnessValue"] ? [[prefs valueForKey:@"FolderStiffnessValue"] doubleValue] : 1 );
+    
+    //extra
+    isNoiconflyEnable = (prefs && [prefs objectForKey:@"nofly"] ? [[prefs valueForKey:@"nofly"] boolValue] : NO );
+    isNoiconZoominSwitcher = (prefs && [prefs objectForKey:@"nozoom"] ? [[prefs valueForKey:@"nozoom"] boolValue] : NO );
+    isNoWallZoominSwitcher = (prefs && [prefs objectForKey:@"noWPzoom"] ? [[prefs valueForKey:@"noWPzoom"] boolValue] : NO );
+    isNoiconshakingEnable = (prefs && [prefs objectForKey:@"noshaking"] ? [[prefs valueForKey:@"noshaking"] boolValue] : NO );
+    isInstantFolder = (prefs && [prefs objectForKey:@"InstantFolder"] ? [[prefs valueForKey:@"InstantFolder"] boolValue] : NO );
+}
+
+void inAppSpeedPreferences(){
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/jb/var/mobile/Library/Preferences/com.hoangdus.speedsterprefs.plist"];
 
     //in-app values
     inAppAnimationEnabled = (prefs && [prefs objectForKey:@"InAppAnimationEnabled"] ? [[prefs valueForKey:@"InAppAnimationEnabled"] boolValue] : NO );
@@ -79,13 +90,6 @@ void preferencesthings(){ //pref starts to look THICC
     MassValue = (prefs && [prefs objectForKey:@"DurationMassValue"] ? [[prefs valueForKey:@"DurationMassValue"] doubleValue] : 0 );
     // StiffnessValue = (prefs && [prefs objectForKey:@"StiffnessValue"] ? [[prefs valueForKey:@"StiffnessValue"] doubleValue] : 1 );
     DurationValue = (prefs && [prefs objectForKey:@"DurationMassValue"] ? [[prefs valueForKey:@"DurationMassValue"] doubleValue] : 0 );
-
-    //extra
-    isNoiconflyEnable = (prefs && [prefs objectForKey:@"nofly"] ? [[prefs valueForKey:@"nofly"] boolValue] : NO );
-    isNoiconZoominSwitcher = (prefs && [prefs objectForKey:@"nozoom"] ? [[prefs valueForKey:@"nozoom"] boolValue] : NO );
-    isNoWallZoominSwitcher = (prefs && [prefs objectForKey:@"noWPzoom"] ? [[prefs valueForKey:@"noWPzoom"] boolValue] : NO );
-    isNoiconshakingEnable = (prefs && [prefs objectForKey:@"noshaking"] ? [[prefs valueForKey:@"noshaking"] boolValue] : NO );
-    isInstantFolder = (prefs && [prefs objectForKey:@"InstantFolder"] ? [[prefs valueForKey:@"InstantFolder"] boolValue] : NO );
 }
 
 //reverse number to make sliders go from left to right lol
@@ -319,22 +323,22 @@ static double reverseFolderSliderValue(double input){
 %end
 
 //In-App animation 2: electric boogaloo
-%hook CAAnimation
+// %hook CAAnimation
 
-    //duration
-   - (void)setDuration:(double)arg1{ //more in app speed but with more side effect 
-        if ([self isKindOfClass:[CASpringAnimationClass class]]) { //thanks fakeclockup
-            %orig(arg1);
-            return;
-        }
-        if(inAppAnimationEnabled){
-            %orig(arg1 * reverseAppSpeedSliderValue(DurationValue));
-        }else{
-            %orig;
-        }
-    }
+//     //duration
+//    - (void)setDuration:(double)arg1{ //more in app speed but with more side effect 
+//         if ([self isKindOfClass:[CASpringAnimationClass class]]) { //thanks fakeclockup
+//             %orig(arg1);
+//             return;
+//         }
+//         if(inAppAnimationEnabled){
+//             %orig(arg1 * reverseAppSpeedSliderValue(DurationValue));
+//         }else{
+//             %orig;
+//         }
+//     }
     
-%end
+// %end
 
 //Screen Turn On and Off Speed
 %hook SBFWakeAnimationSettings
@@ -413,6 +417,8 @@ static double reverseFolderSliderValue(double input){
     CASpringAnimationClass = NSClassFromString(@"CASpringAnimation");
     // SBFAnimationSettingsClass = NSClassFromString(@"SBFAnimationSettings");
     isOnSpringBoard = [[[NSBundle mainBundle] bundleIdentifier] isEqual:@"com.apple.springboard"];
+
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)preferencesthings, CFSTR("com.hoangdus.speedsterprefs-updated"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	preferencesthings();
+	inAppSpeedPreferences();
 }
