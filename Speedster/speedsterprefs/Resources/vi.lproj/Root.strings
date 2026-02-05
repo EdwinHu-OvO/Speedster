@@ -1,15 +1,15 @@
 
 
-"Bounce" = "Độ nảy";
+"App Open/Close" = "App (Đóng/Mở)";
+
+
+"AppOpenCloseBounce" = "Độ nảy";
+
+
+"AppOpenCloseSpeed" = "Tốc độ mở app";
 
 
 "Buy me a Fanta" = "Mua tôi 1 lon Fanta 🥤";
-
-
-"Damping" = "Độ nảy";
-
-
-"Duration" = "Thời gian hoạt ảnh";
 
 
 "Extra" = "Cài đặt thêm";
@@ -19,6 +19,9 @@
 
 
 "FineTuneSpeed" = "Tuỳ chỉnh tốc độ bằng tay";
+
+
+"Folder" = "Thư mục (Đóng/Mở)";
 
 
 "FolderAnimation" = "Tốc độ thư mục";
@@ -39,22 +42,28 @@
 "InAppAnimation" = "Tốc độ trong app";
 
 
+"InAppDamping" = "Độ nảy";
+
+
+"InAppMass" = "Tốc độ trong app";
+
+
 "InstantFolder" = "Tắt hoạt ảnh mở thư mục";
 
 
-"Links" = "Liên kết";
+"Links" = "Link";
 
 
-"Mass" = "Trọng lượng hoạt ảnh";
-
-
-"My twitter" = "Twitter của thôi";
+"My twitter" = "Twitter của tôi";
 
 
 "Respring" = "Respring";
 
 
-"Respring to apply changes" = "Respring để áp dụng thay đổi(Có thể phải làm 2 lần)";
+"Respring to apply changes" = "Respring để áp dụng thay đổi";
+
+
+"Screen Off/On" = "Màn hình (Tắt/Bật) (Không cần respring)";
 
 
 "Screen sleep(←faster|slower→)" = "Tốc độ tắt màn";
@@ -66,13 +75,7 @@
 "SideEffect" = "*Có 1 vài tắc dụng phụ nhỏ";
 
 
-"Sleep Wake Speed" = "Tốc độ bật tắt màn hình";
-
-
 "Source code" = "Mã nguồn";
-
-
-"Speed" = "Tốc độ mở app";
 
 
 "Switcher homescreen zoom out" = "Icon zoom ra trong đa nghiệm";
