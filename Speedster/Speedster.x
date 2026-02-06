@@ -403,13 +403,15 @@ static double reverseFolderSliderValue(double input){
 %end
 
 %hook SBIconView
-    -(void)setAllowsEditingAnimation:(BOOL)arg1{//Icon editting jitter
-        if (isNoiconshakingEnable){ 
-            %orig(NO);
+
+    -(void)setEditingAnimationStrength:(CGFloat)arg1{
+         if (isNoiconshakingEnable){ 
+            %orig(0);
         }else{
-            %orig;
+            %orig(arg1);
         }
     }
+
 %end
 
 %ctor { //More pref
