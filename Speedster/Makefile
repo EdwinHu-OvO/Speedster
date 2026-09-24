@@ -8,8 +8,8 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Speedster
 
-Speedster_FILES = Speedster.x
-Speedster_FRAMEWORKS = UIKit
+Speedster_FILES = Speedster.x Slowdown.x
+Speedster_FRAMEWORKS = UIKit QuartzCore
 Speedster_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk

@@ -1,0 +1,89 @@
+name: Build Speedster
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "Speedster/**"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "Speedster/**"
+      - ".github/workflows/build.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ${{ matrix.variant }}
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: rootless
+            scheme: rootless
+            deployment: "15.0"
+          - variant: rootful
+            scheme: ""
+            deployment: "14.0"
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      THEOS_REVISION: dd5c14bb9d91311e221d51b5bfb8c9e5948156db
+      SDK_RELEASE: master-146e41f
+      SDK_VERSION: "16.5"
+      PACKAGE_SCHEME: ${{ matrix.scheme }}
+      DEPLOYMENT_VERSION: ${{ matrix.deployment }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install build tools
+        run: |
+          echo "THEOS=$RUNNER_TEMP/theos" >> "$GITHUB_ENV"
+          brew install ldid make
+
+      - name: Install Theos
+        run: |
+          git init "$THEOS"
+          git -C "$THEOS" remote add origin https://github.com/theos/theos.git
+          git -C "$THEOS" fetch --depth 1 origin "$THEOS_REVISION"
+          git -C "$THEOS" checkout --detach FETCH_HEAD
+          git -C "$THEOS" submodule update --init --recursive --depth 1
+
+      - name: Download iOS SDK
+        run: |
+          sdk_archive="$RUNNER_TEMP/iPhoneOS${SDK_VERSION}.sdk.tar.xz"
+          curl --fail --location --retry 3 \
+            "https://github.com/theos/sdks/releases/download/${SDK_RELEASE}/iPhoneOS${SDK_VERSION}.sdk.tar.xz" \
+            --output "$sdk_archive"
+          mkdir -p "$THEOS/sdks"
+          tar -xJf "$sdk_archive" -C "$THEOS/sdks"
+          test -d "$THEOS/sdks/iPhoneOS${SDK_VERSION}.sdk"
+
+      - name: Build package
+        working-directory: Speedster
+        run: |
+          gmake package FINALPACKAGE=1 \
+            THEOS_PACKAGE_SCHEME="$PACKAGE_SCHEME" \
+            SDK_PATH="$THEOS/sdks/iPhoneOS${SDK_VERSION}.sdk/" \
+            TARGET="iphone:clang:${SDK_VERSION}:${DEPLOYMENT_VERSION}"
+
+      - name: Upload package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Speedster-${{ matrix.variant }}-${{ github.run_number }}
+          path: Speedster/packages/*.deb
+          if-no-files-found: error
+          retention-days: 30

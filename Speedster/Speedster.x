@@ -1,6 +1,9 @@
 #import <UIKit/UIKit.h>
+#import "SpeedsterTiming.h"
+
+double SpeedsterSlowdownMultiplier = 1.0;
 static BOOL isOnSpringBoard;
-static double SwitcherDismiss;
+static double SwitcherDismiss = -1;
 
 // static Class CASpringAnimationClass = Nil;
 // static Class SBFAnimationSettingsClass = Nil;
@@ -45,6 +48,10 @@ static BOOL isInstantFolder;
 void preferencesthings(){ //pref starts to look THICC
     NSDictionary *prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.hoangdus.speedsterprefs"];
 
+    id slowdown = prefs[@"SlowdownMultiplier"];
+    SpeedsterSlowdownMultiplier = [slowdown respondsToSelector:@selector(doubleValue)]
+        ? SpeedsterClampSlowdown([slowdown doubleValue]) : 1.0;
+
     //app close/open values
     isSpeedEnable = (prefs && [prefs objectForKey:@"isSpeedEnable"] ? [[prefs valueForKey:@"isSpeedEnable"] boolValue] : NO );
     isBounceEnable = (prefs && [prefs objectForKey:@"isBounceEnable"] ? [[prefs valueForKey:@"isBounceEnable"] boolValue] : NO );
@@ -80,6 +87,13 @@ void preferencesthings(){ //pref starts to look THICC
 
 void inAppSpeedPreferences(){
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/jb/var/mobile/Library/Preferences/com.hoangdus.speedsterprefs.plist"];
+    if (!prefs) {
+        prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.hoangdus.speedsterprefs.plist"];
+    }
+    id slowdown = prefs[@"SlowdownMultiplier"];
+    if (!isOnSpringBoard && [slowdown respondsToSelector:@selector(doubleValue)]) {
+        SpeedsterSlowdownMultiplier = SpeedsterClampSlowdown([slowdown doubleValue]);
+    }
 
     //in-app values
     inAppAnimationEnabled = (prefs && [prefs objectForKey:@"InAppAnimationEnabled"] ? [[prefs valueForKey:@"InAppAnimationEnabled"] boolValue] : NO );
@@ -122,6 +136,11 @@ static double reverseFolderSliderValue(double input){
 //App Open animation and bouncing
 %hook SBFFluidBehaviorSettings
     -(void)setResponse:(double)arg1{ //App open and close speed
+        if (SpeedsterSlowdownMultiplier < 1.0) {
+            SwitcherDismiss = -1;
+            %orig(arg1 / SpeedsterSlowdownMultiplier);
+            return;
+        }
         if(isSpeedEnable){
             if(!isFineTuneSpeedEnable){
                 //Change speed value base on selector pos
@@ -214,10 +233,13 @@ static double reverseFolderSliderValue(double input){
 //Springboard speed (mostly for folder but might affect something else on springboard too)
 %hook SBFAnimationSettings
 
-    //folder starting speed
-    // -(void)setInitialVelocity:(double)arg1{
-    //     %orig;
-    // }
+    -(void)setInitialVelocity:(double)arg1{
+        if (SpeedsterSlowdownMultiplier < 1.0 && !isInstantFolder) {
+            %orig(arg1 * SpeedsterSlowdownMultiplier);
+        } else {
+            %orig;
+        }
+    }
 
     // -(void)setSpeed:(double)arg1{
     //     if(isInstantFolder){
@@ -232,6 +254,10 @@ static double reverseFolderSliderValue(double input){
     // }
 
     -(void)setDamping:(double)arg1{
+        if (SpeedsterSlowdownMultiplier < 1.0 && !isInstantFolder) {
+            %orig(arg1 / SpeedsterSlowdownMultiplier);
+            return;
+        }
         if(isInstantFolder){
             %orig;
         }else{
@@ -245,6 +271,11 @@ static double reverseFolderSliderValue(double input){
 
     //folder mass
     -(void)setMass:(double)arg1{
+        if (SpeedsterSlowdownMultiplier < 1.0 && !isInstantFolder) {
+            // Scale mass and damping together to preserve the damping ratio.
+            %orig(arg1 / (SpeedsterSlowdownMultiplier * SpeedsterSlowdownMultiplier));
+            return;
+        }
         if(isInstantFolder){
             %orig(arg1*0.0001);
         }else{
@@ -297,7 +328,7 @@ static double reverseFolderSliderValue(double input){
 
     //mass
     -(void)setMass:(double)arg1{ //in app speed
-        if(inAppAnimationEnabled && !isOnSpringBoard){
+        if(inAppAnimationEnabled && !isOnSpringBoard && SpeedsterSlowdownMultiplier == 1.0){
             %orig(arg1 * reverseAppSpeedSliderValue(MassValue));
         }else{
             %orig(arg1);
@@ -305,7 +336,7 @@ static double reverseFolderSliderValue(double input){
     }
 
     -(void)setDamping:(double)arg1{
-        if((inAppAnimationEnabled && inAppAnimationBounceEnabled) && !isOnSpringBoard){
+        if((inAppAnimationEnabled && inAppAnimationBounceEnabled) && !isOnSpringBoard && SpeedsterSlowdownMultiplier == 1.0){
             %orig(arg1 * reverseAppSpeedSliderValue(DampingValue));
         }else{
             %orig(arg1);
@@ -343,6 +374,9 @@ static double reverseFolderSliderValue(double input){
 //Screen Turn On and Off Speed
 %hook SBFWakeAnimationSettings
     -(double)backlightFadeDuration{ //Screen turn off speed
+        if (SpeedsterSlowdownMultiplier < 1.0) {
+            return %orig / SpeedsterSlowdownMultiplier;
+        }
         if(isScreensleepEnable){
             return reverseTurnOffSpeed(Screensleepvalue);
         }else{
@@ -350,6 +384,9 @@ static double reverseFolderSliderValue(double input){
         }
     }
     -(double)speedMultiplierForWake{ //Screen turn on speed (might be glitchy)
+        if (SpeedsterSlowdownMultiplier < 1.0) {
+            return %orig * SpeedsterSlowdownMultiplier;
+        }
         if(isScreenwakeEnable){
             return Screenwakevalue;
         }else{
@@ -357,6 +394,9 @@ static double reverseFolderSliderValue(double input){
         }
     }
     -(double)speedMultiplierForLiftToWake{ //Screen turn on speed but for lift to wake (again might be glitchy)
+        if (SpeedsterSlowdownMultiplier < 1.0) {
+            return %orig * SpeedsterSlowdownMultiplier;
+        }
         if(isScreenwakeEnable){
             return Screenwakevalue;
         }else{
@@ -384,6 +424,9 @@ static double reverseFolderSliderValue(double input){
     }
 
     -(double)emptySwitcherDismissDelay{ //Switcher fix when set speed too high
+        if (SpeedsterSlowdownMultiplier < 1.0) {
+            return %orig / SpeedsterSlowdownMultiplier;
+        }
         if (SwitcherDismiss != -1){
             return SwitcherDismiss;
         }else{
@@ -414,13 +457,19 @@ static double reverseFolderSliderValue(double input){
 
 %end
 
+static void preferencesDidChange(CFNotificationCenterRef center, void *observer,
+                                 CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    preferencesthings();
+    inAppSpeedPreferences();
+}
+
 %ctor { //More pref
     // NSLog(@"[Speedster] load test");
     // CASpringAnimationClass = NSClassFromString(@"CASpringAnimation");
     // SBFAnimationSettingsClass = NSClassFromString(@"SBFAnimationSettings");
     isOnSpringBoard = [[[NSBundle mainBundle] bundleIdentifier] isEqual:@"com.apple.springboard"];
 
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)preferencesthings, CFSTR("com.hoangdus.speedsterprefs-updated"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, preferencesDidChange, CFSTR("com.hoangdus.speedsterprefs-updated"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	preferencesthings();
 	inAppSpeedPreferences();
 }

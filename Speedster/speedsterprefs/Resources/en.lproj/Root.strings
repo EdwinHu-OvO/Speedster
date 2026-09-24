@@ -2,6 +2,10 @@
 
 "App Open/Close" = "App Open/Close";
 
+"Slow Motion" = "Slow Motion";
+"Playback Speed" = "Playback Speed";
+"SlowMotionHelp" = "0.1 = one-tenth speed; 1 = use the speed settings above. Slow motion overrides acceleration. Disable Instant Folder to slow folders. Respring and reopen apps after changing this setting.";
+
 
 "AppOpenCloseBounce" = "Bounce";
 

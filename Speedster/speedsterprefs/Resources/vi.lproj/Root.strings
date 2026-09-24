@@ -2,6 +2,10 @@
 
 "App Open/Close" = "App (Đóng/Mở)";
 
+"Slow Motion" = "Chuyển động chậm";
+"Playback Speed" = "Tốc độ phát";
+"SlowMotionHelp" = "0.1 = một phần mười tốc độ; 1 = dùng cài đặt tốc độ ở trên. Chuyển động chậm thay thế tăng tốc. Tắt Instant Folder để làm chậm thư mục. Respring và mở lại ứng dụng sau khi thay đổi.";
+
 
 "AppOpenCloseBounce" = "Độ nảy";
 

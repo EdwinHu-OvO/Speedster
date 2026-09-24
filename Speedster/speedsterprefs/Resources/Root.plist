@@ -462,6 +462,36 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>Slow Motion</string>
+			<key>footerText</key>
+			<string>SlowMotionHelp</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>label</key>
+			<string>Playback Speed</string>
+			<key>default</key>
+			<real>1</real>
+			<key>defaults</key>
+			<string>com.hoangdus.speedsterprefs</string>
+			<key>PostNotification</key>
+			<string>com.hoangdus.speedsterprefs-updated</string>
+			<key>key</key>
+			<string>SlowdownMultiplier</string>
+			<key>min</key>
+			<real>0.1</real>
+			<key>max</key>
+			<real>1</real>
+			<key>showValue</key>
+			<true/>
+			<key>isSegmented</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>Extra</string>
 		</dict>
 		<dict>

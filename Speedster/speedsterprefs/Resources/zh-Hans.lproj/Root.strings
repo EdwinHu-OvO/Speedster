@@ -1,0 +1,3 @@
+"Slow Motion" = "慢动作";
+"Playback Speed" = "播放速度";
+"SlowMotionHelp" = "0.1 为十分之一倍速；1 使用上方的速度设置。减速时优先于加速设置。文件夹减速需关闭 Instant Folder。修改后请注销桌面并重新打开应用。";
